@@ -1,5 +1,7 @@
+import type { SampleTier } from "@/lib/audio/samples/sample-manager";
 import { Knob } from "./Knob";
 import { OctaveControl } from "./OctaveControl";
+import { QualityIndicator } from "./QualityIndicator";
 
 interface ControlPanelProps {
   volume: number;
@@ -15,6 +17,7 @@ interface ControlPanelProps {
   octaveBase: number;
   onOctaveUp: () => void;
   onOctaveDown: () => void;
+  qualityTier: SampleTier;
 }
 
 export function ControlPanel({
@@ -31,6 +34,7 @@ export function ControlPanel({
   octaveBase,
   onOctaveUp,
   onOctaveDown,
+  qualityTier,
 }: ControlPanelProps) {
   return (
     <div
@@ -55,12 +59,15 @@ export function ControlPanel({
         <Knob label="Chorus" value={chorusMix} onChange={onChorusMixChange} />
       </div>
 
-      {/* Octave */}
-      <OctaveControl
-        octaveBase={octaveBase}
-        onOctaveUp={onOctaveUp}
-        onOctaveDown={onOctaveDown}
-      />
+      {/* Octave + Quality */}
+      <div className="flex items-center gap-3">
+        <QualityIndicator tier={qualityTier} />
+        <OctaveControl
+          octaveBase={octaveBase}
+          onOctaveUp={onOctaveUp}
+          onOctaveDown={onOctaveDown}
+        />
+      </div>
     </div>
   );
 }

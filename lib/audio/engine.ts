@@ -40,6 +40,10 @@ export class AudioEngine {
     return this.ctx !== null && this.ctx.state === "running";
   }
 
+  get context(): AudioContext | null {
+    return this.ctx;
+  }
+
   noteOn(midi: number, velocity?: number): void {
     if (!this.ctx || !this.effects) return;
     if (this.pool.has(midi)) return; // Already playing

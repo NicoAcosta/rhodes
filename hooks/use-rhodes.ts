@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AudioEngine } from "@/lib/audio/engine";
+import { Voice } from "@/lib/audio/voice";
+import { SampledVoice } from "@/lib/audio/samples/sampled-voice";
+import {
+  SampleManager,
+  type SampleTier,
+} from "@/lib/audio/samples/sample-manager";
 import { useKeyboardInput } from "@/lib/input/use-keyboard-input";
 
 const DEFAULT_OCTAVE_BASE = 48; // C3
@@ -8,9 +14,11 @@ const MAX_OCTAVE_BASE = 72; // C5 (top of 2nd octave = C7)
 
 export function useRhodes() {
   const engineRef = useRef<AudioEngine | null>(null);
+  const sampleManagerRef = useRef<SampleManager | null>(null);
   const [isReady, setIsReady] = useState(false);
   const [activeNotes, setActiveNotes] = useState<Set<number>>(new Set());
   const [octaveBase, setOctaveBase] = useState(DEFAULT_OCTAVE_BASE);
+  const [qualityTier, setQualityTier] = useState<SampleTier>("fm");
 
   // Controls
   const [volume, setVolume] = useState(0.7);
@@ -24,7 +32,28 @@ export function useRhodes() {
     if (engineRef.current?.isReady) return;
 
     if (!engineRef.current) {
-      engineRef.current = new AudioEngine();
+      // Dynamic factory: prefer sampled voice, fall back to FM
+      const factory = (
+        ctx: AudioContext,
+        midi: number,
+        dest: AudioNode,
+        velocity?: number
+      ) => {
+        const sample = sampleManagerRef.current?.lookup(midi, velocity);
+        if (sample) {
+          return new SampledVoice(
+            ctx,
+            midi,
+            dest,
+            sample.buffer,
+            sample.playbackRate,
+            velocity
+          );
+        }
+        return new Voice(ctx, midi, dest, undefined, velocity);
+      };
+
+      engineRef.current = new AudioEngine(factory);
     }
 
     await engineRef.current.init();
@@ -35,6 +64,16 @@ export function useRhodes() {
     engineRef.current.setTone(tone);
     engineRef.current.setChorusMix(chorusMix);
     setIsReady(true);
+
+    // Start loading samples in background
+    const ctx = engineRef.current.context;
+    if (ctx && !sampleManagerRef.current) {
+      const mgr = new SampleManager(ctx);
+      sampleManagerRef.current = mgr;
+      mgr.onTierChange = setQualityTier;
+
+      mgr.loadTier1().then(() => mgr.loadTier2());
+    }
   }, [volume, tremoloRate, tremoloDepth, tone, chorusMix]);
 
   // Sync controls to engine
@@ -106,6 +145,7 @@ export function useRhodes() {
   // Cleanup
   useEffect(() => {
     return () => {
+      sampleManagerRef.current?.dispose();
       engineRef.current?.dispose();
     };
   }, []);
@@ -114,6 +154,7 @@ export function useRhodes() {
     isReady,
     activeNotes,
     octaveBase,
+    qualityTier,
     noteOn,
     noteOff,
     init,

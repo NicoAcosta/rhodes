@@ -46,6 +46,7 @@ export function Rhodes() {
         octaveBase={rhodes.octaveBase}
         onOctaveUp={rhodes.octaveUp}
         onOctaveDown={rhodes.octaveDown}
+        qualityTier={rhodes.qualityTier}
       />
 
       {/* Chrome mid trim */}
