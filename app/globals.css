@@ -1,26 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --body: #1a1a1a;
+  --chrome: #c0c0c0;
+  --key-white: #f5f0e8;
+  --key-black: #2d2d2d;
+  --accent: #e8a040;
+  --panel: #3d3530;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-body: var(--body);
+  --color-chrome: var(--chrome);
+  --color-key-white: var(--key-white);
+  --color-key-black: var(--key-black);
+  --color-accent: var(--accent);
+  --color-panel: var(--panel);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--body);
+  color: var(--chrome);
+  font-family: system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Compact control panel in mobile landscape */
+@media (orientation: landscape) and (max-height: 500px) {
+  .landscape\:max-h-\[80px\] {
+    max-height: 60px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
 }
