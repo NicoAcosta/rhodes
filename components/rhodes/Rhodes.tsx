@@ -41,6 +41,8 @@ export function Rhodes() {
         onTremoloDepthChange={rhodes.setTremoloDepth}
         tone={rhodes.tone}
         onToneChange={rhodes.setTone}
+        chorusMix={rhodes.chorusMix}
+        onChorusMixChange={rhodes.setChorusMix}
         octaveBase={rhodes.octaveBase}
         onOctaveUp={rhodes.octaveUp}
         onOctaveDown={rhodes.octaveDown}

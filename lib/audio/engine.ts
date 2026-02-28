@@ -21,7 +21,7 @@ export class AudioEngine {
     this.pool = new VoicePool(12);
     this.factory =
       factory ??
-      ((ctx, midi, dest) => new Voice(ctx, midi, dest));
+      ((ctx, midi, dest, velocity?) => new Voice(ctx, midi, dest, undefined, velocity));
   }
 
   /** Initialize or resume the AudioContext. Must be called from a user gesture. */
@@ -40,11 +40,11 @@ export class AudioEngine {
     return this.ctx !== null && this.ctx.state === "running";
   }
 
-  noteOn(midi: number): void {
+  noteOn(midi: number, velocity?: number): void {
     if (!this.ctx || !this.effects) return;
     if (this.pool.has(midi)) return; // Already playing
 
-    const voice = this.factory(this.ctx, midi, this.effects.input);
+    const voice = this.factory(this.ctx, midi, this.effects.input, velocity);
     this.pool.add(voice);
   }
 
@@ -70,6 +70,10 @@ export class AudioEngine {
 
   setTone(value: number): void {
     this.effects?.setTone(value);
+  }
+
+  setChorusMix(value: number): void {
+    this.effects?.setChorusMix(value);
   }
 
   dispose(): void {

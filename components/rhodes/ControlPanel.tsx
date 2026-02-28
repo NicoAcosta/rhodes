@@ -10,6 +10,8 @@ interface ControlPanelProps {
   onTremoloDepthChange: (v: number) => void;
   tone: number;
   onToneChange: (v: number) => void;
+  chorusMix: number;
+  onChorusMixChange: (v: number) => void;
   octaveBase: number;
   onOctaveUp: () => void;
   onOctaveDown: () => void;
@@ -24,6 +26,8 @@ export function ControlPanel({
   onTremoloDepthChange,
   tone,
   onToneChange,
+  chorusMix,
+  onChorusMixChange,
   octaveBase,
   onOctaveUp,
   onOctaveDown,
@@ -48,6 +52,7 @@ export function ControlPanel({
           onChange={onTremoloDepthChange}
         />
         <Knob label="Tone" value={tone} onChange={onToneChange} />
+        <Knob label="Chorus" value={chorusMix} onChange={onChorusMixChange} />
       </div>
 
       {/* Octave */}

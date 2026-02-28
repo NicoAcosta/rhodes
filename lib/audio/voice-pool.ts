@@ -3,7 +3,8 @@ import type { IVoice } from "./voice";
 export type VoiceFactory = (
   ctx: AudioContext,
   midi: number,
-  destination: AudioNode
+  destination: AudioNode,
+  velocity?: number
 ) => IVoice;
 
 /**

@@ -17,6 +17,7 @@ export function useRhodes() {
   const [tremoloRate, setTremoloRate] = useState(0);
   const [tremoloDepth, setTremoloDepth] = useState(0);
   const [tone, setTone] = useState(0.5);
+  const [chorusMix, setChorusMix] = useState(0);
 
   // Initialize engine on first user interaction
   const init = useCallback(async () => {
@@ -32,8 +33,9 @@ export function useRhodes() {
     engineRef.current.setTremoloRate(tremoloRate);
     engineRef.current.setTremoloDepth(tremoloDepth);
     engineRef.current.setTone(tone);
+    engineRef.current.setChorusMix(chorusMix);
     setIsReady(true);
-  }, [volume, tremoloRate, tremoloDepth, tone]);
+  }, [volume, tremoloRate, tremoloDepth, tone, chorusMix]);
 
   // Sync controls to engine
   useEffect(() => {
@@ -51,6 +53,10 @@ export function useRhodes() {
   useEffect(() => {
     engineRef.current?.setTone(tone);
   }, [tone]);
+
+  useEffect(() => {
+    engineRef.current?.setChorusMix(chorusMix);
+  }, [chorusMix]);
 
   // Note handlers — imperative audio, React state for visuals
   const noteOn = useCallback(
@@ -120,6 +126,8 @@ export function useRhodes() {
     setTremoloDepth,
     tone,
     setTone,
+    chorusMix,
+    setChorusMix,
     octaveUp,
     octaveDown,
   };
