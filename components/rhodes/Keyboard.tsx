@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { Key } from "./Key";
-import { KEY_LAYOUT } from "@/lib/input/key-mappings";
+import { KEY_MAP, KEY_LABELS } from "@/lib/input/key-mappings";
 import { useTouchInput } from "@/lib/input/use-touch-input";
 
 // White key semitone offsets within an octave
@@ -14,11 +14,14 @@ const BLACK_KEYS: { offset: number; afterWhite: number }[] = [
   { offset: 10, afterWhite: 5 }, // A#
 ];
 
-// Reverse lookup: midi offset → keyboard shortcut label
+// Reverse lookup: midi note → keyboard shortcut label (primary 24 keys only)
 function buildLabelMap(octaveBase: number): Map<number, string> {
   const map = new Map<number, string>();
-  for (const [key, offset] of Object.entries(KEY_LAYOUT)) {
-    map.set(octaveBase + offset, key.toUpperCase());
+  for (const [code, label] of Object.entries(KEY_LABELS)) {
+    const offset = KEY_MAP[code];
+    if (offset !== undefined) {
+      map.set(octaveBase + offset, label);
+    }
   }
   return map;
 }

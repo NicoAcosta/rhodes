@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { keyToMidiNote } from "./key-mappings";
+import { codeToMidiNote } from "./key-mappings";
 
 interface UseKeyboardInputOptions {
   octaveBase: number;
@@ -23,23 +23,21 @@ export function useKeyboardInput({
       if (e.repeat) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
 
-      const midi = keyToMidiNote(e.key, octaveBase);
+      const midi = codeToMidiNote(e.code, octaveBase);
       if (midi === null) return;
 
       e.preventDefault();
-      const keyLower = e.key.toLowerCase();
-      if (held.has(keyLower)) return;
-      held.add(keyLower);
+      if (held.has(e.code)) return;
+      held.add(e.code);
       onNoteOn(midi);
     }
 
     function handleKeyUp(e: KeyboardEvent) {
-      const midi = keyToMidiNote(e.key, octaveBase);
+      const midi = codeToMidiNote(e.code, octaveBase);
       if (midi === null) return;
 
       e.preventDefault();
-      const keyLower = e.key.toLowerCase();
-      held.delete(keyLower);
+      held.delete(e.code);
       onNoteOff(midi);
     }
 
@@ -49,7 +47,6 @@ export function useKeyboardInput({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
-      // Release all held notes on cleanup
       held.clear();
     };
   }, [octaveBase, onNoteOn, onNoteOff, enabled]);
