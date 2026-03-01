@@ -40,6 +40,7 @@ export function Knob({ label, value, onChange }: KnobProps) {
   const ringGradId = `ring-${ids}`;
   const knurlId = `knurl-${ids}`;
   const shadowId = `shadow-${ids}`;
+  const notchShadowId = `notch-shadow-${ids}`;
   const dragStartRef = useRef<{ y: number; startValue: number } | null>(null);
 
   const angle = MIN_ANGLE + value * (MAX_ANGLE - MIN_ANGLE);
@@ -93,42 +94,51 @@ export function Knob({ label, value, onChange }: KnobProps) {
         onPointerCancel={handlePointerUp}
       >
         <defs>
-          {/* Ambient shadow */}
+          {/* Ambient shadow — deeper */}
           <radialGradient id={shadowId}>
-            <stop offset="0%" stopColor="rgba(0,0,0,0.4)" />
+            <stop offset="0%" stopColor="rgba(0,0,0,0.55)" />
+            <stop offset="70%" stopColor="rgba(0,0,0,0.15)" />
             <stop offset="100%" stopColor="rgba(0,0,0,0)" />
           </radialGradient>
-          {/* Silver outer ring gradient - top-to-bottom bevel */}
+          {/* Silver outer ring gradient — 7 stops for richer chrome */}
           <linearGradient id={ringGradId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#e8eaee" />
-            <stop offset="25%" stopColor="#b0b3b8" />
-            <stop offset="50%" stopColor="#8a8d94" />
-            <stop offset="75%" stopColor="#b0b3b8" />
-            <stop offset="100%" stopColor="#d0d2d6" />
+            <stop offset="0%" stopColor="#f0f1f4" />
+            <stop offset="15%" stopColor="#c0c3c8" />
+            <stop offset="35%" stopColor="#808590" />
+            <stop offset="50%" stopColor="#a0a3a8" />
+            <stop offset="65%" stopColor="#808590" />
+            <stop offset="85%" stopColor="#c0c3c8" />
+            <stop offset="100%" stopColor="#f0f1f4" />
           </linearGradient>
-          {/* Knurled grip pattern */}
+          {/* Knurled grip pattern — diagonal checkerboard */}
           <pattern id={knurlId} width="2" height="2" patternUnits="userSpaceOnUse">
             <rect width="2" height="2" fill="#28292e" />
-            <rect width="1" height="2" fill="#1e1f24" />
+            <rect x="0" y="0" width="1" height="1" fill="#1e1f24" />
+            <rect x="1" y="1" width="1" height="1" fill="#1e1f24" />
           </pattern>
-          {/* Chrome cap gradient */}
-          <radialGradient id={capGradId} cx="38%" cy="32%">
-            <stop offset="0%" stopColor="#e2e4e8" />
-            <stop offset="50%" stopColor="#c0c2c8" />
-            <stop offset="100%" stopColor="#6b6e74" />
+          {/* Chrome cap gradient — brighter highlight, deeper shadow */}
+          <radialGradient id={capGradId} cx="35%" cy="30%">
+            <stop offset="0%" stopColor="#f2f3f6" />
+            <stop offset="40%" stopColor="#d0d2d8" />
+            <stop offset="70%" stopColor="#a0a2a8" />
+            <stop offset="100%" stopColor="#606368" />
           </radialGradient>
+          {/* Drop shadow filter for indicator notch */}
+          <filter id={notchShadowId} x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="1" stdDeviation="1" floodColor="rgba(0,0,0,0.5)" />
+          </filter>
         </defs>
 
-        {/* Ambient shadow below knob */}
+        {/* Ambient shadow below knob — larger */}
         <ellipse
           cx={CENTER}
-          cy={CENTER + 2}
-          rx="30"
-          ry="28"
+          cy={CENTER + 3}
+          rx="33"
+          ry="30"
           fill={`url(#${shadowId})`}
         />
 
-        {/* Tick marks */}
+        {/* Tick marks — dark on light */}
         {ticks.map((tick, i) => (
           <line
             key={i}
@@ -136,8 +146,8 @@ export function Knob({ label, value, onChange }: KnobProps) {
             y1={tick.y1}
             x2={tick.x2}
             y2={tick.y2}
-            stroke={tick.active ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.12)"}
-            strokeWidth="1.5"
+            stroke={tick.active ? "rgba(60,62,70,0.9)" : "rgba(60,62,70,0.3)"}
+            strokeWidth="1.8"
             strokeLinecap="round"
           />
         ))}
@@ -149,6 +159,16 @@ export function Knob({ label, value, onChange }: KnobProps) {
           r={OUTER_R}
           fill={`url(#${ringGradId})`}
           stroke="rgba(0,0,0,0.3)"
+          strokeWidth="0.8"
+        />
+
+        {/* Chrome lip ring */}
+        <circle
+          cx={CENTER}
+          cy={CENTER}
+          r={OUTER_R - 2}
+          fill="none"
+          stroke="rgba(255,255,255,0.2)"
           strokeWidth="0.5"
         />
 
@@ -169,6 +189,16 @@ export function Knob({ label, value, onChange }: KnobProps) {
           r={KNURL_R}
           fill={`url(#${knurlId})`}
           stroke="#1a1b1e"
+          strokeWidth="0.8"
+        />
+
+        {/* Knurl inset shadow ring */}
+        <circle
+          cx={CENTER}
+          cy={CENTER}
+          r={KNURL_R - 0.5}
+          fill="none"
+          stroke="rgba(0,0,0,0.25)"
           strokeWidth="0.5"
         />
 
@@ -179,30 +209,53 @@ export function Knob({ label, value, onChange }: KnobProps) {
           r={CAP_R}
           fill={`url(#${capGradId})`}
           stroke="rgba(0,0,0,0.25)"
-          strokeWidth="0.5"
+          strokeWidth="0.6"
         />
 
-        {/* Specular highlight on cap */}
+        {/* Cap edge highlight ring */}
+        <circle
+          cx={CENTER}
+          cy={CENTER}
+          r={CAP_R - 0.5}
+          fill="none"
+          stroke="rgba(255,255,255,0.12)"
+          strokeWidth="0.4"
+        />
+
+        {/* Primary specular highlight on cap — larger */}
         <ellipse
           cx={CENTER - 4}
           cy={CENTER - 5}
-          rx="8"
+          rx="9"
           ry="5"
-          fill="rgba(255,255,255,0.18)"
+          fill="rgba(255,255,255,0.25)"
         />
 
-        {/* White indicator notch */}
+        {/* Secondary specular glint — lower right */}
+        <ellipse
+          cx={CENTER + 5}
+          cy={CENTER + 4}
+          rx="4"
+          ry="2.5"
+          fill="rgba(255,255,255,0.08)"
+        />
+
+        {/* White indicator notch with drop shadow */}
         <line
           x1={nx1}
           y1={ny1}
           x2={nx2}
           y2={ny2}
           stroke="#ffffff"
-          strokeWidth="2.5"
+          strokeWidth="2.8"
           strokeLinecap="round"
+          filter={`url(#${notchShadowId})`}
         />
       </svg>
-      <span className="font-[family-name:var(--font-label)] text-[10px] uppercase tracking-[0.15em] text-chrome/60">
+      <span
+        className="font-[family-name:var(--font-label)] text-[10px] uppercase tracking-[0.15em]"
+        style={{ color: "var(--label-dark)" }}
+      >
         {label}
       </span>
     </div>

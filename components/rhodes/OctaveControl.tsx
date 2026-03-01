@@ -16,18 +16,23 @@ export function OctaveControl({
 
   return (
     <div className="section-panel flex flex-col gap-1.5 px-3 py-2">
-      <span className="font-[family-name:var(--font-label)] text-[9px] uppercase tracking-[0.15em] text-chrome/50">
+      <span
+        className="font-[family-name:var(--font-label)] text-[10px] font-bold uppercase tracking-[0.15em]"
+        style={{ color: "var(--section-title)" }}
+      >
         Octave
       </span>
       <div className="flex items-center gap-2">
         <button
           onClick={onOctaveDown}
           className="flex h-7 w-7 items-center justify-center rounded
-            text-chrome/70 text-xs font-bold
-            transition-colors hover:text-chrome active:bg-white/5"
+            text-xs font-bold
+            transition-all hover:brightness-110 active:brightness-95"
           style={{
-            background: "linear-gradient(to bottom, #3a3c42, #2a2c30)",
-            border: "1px solid var(--panel-border)",
+            background: "linear-gradient(to bottom, #b8bcc4, #a0a4ac)",
+            border: "1px solid #909498",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.4)",
+            color: "var(--section-title)",
           }}
           aria-label="Octave down"
         >
@@ -41,11 +46,13 @@ export function OctaveControl({
         <button
           onClick={onOctaveUp}
           className="flex h-7 w-7 items-center justify-center rounded
-            text-chrome/70 text-xs font-bold
-            transition-colors hover:text-chrome active:bg-white/5"
+            text-xs font-bold
+            transition-all hover:brightness-110 active:brightness-95"
           style={{
-            background: "linear-gradient(to bottom, #3a3c42, #2a2c30)",
-            border: "1px solid var(--panel-border)",
+            background: "linear-gradient(to bottom, #b8bcc4, #a0a4ac)",
+            border: "1px solid #909498",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.4)",
+            color: "var(--section-title)",
           }}
           aria-label="Octave up"
         >

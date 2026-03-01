@@ -15,6 +15,11 @@
   --namerail: #141416;
   --led: #d4a020;
   --led-off: #3a3530;
+  --panel-aluminum: #cdd1d8;
+  --panel-aluminum-light: #dce0e6;
+  --panel-aluminum-dark: #a8adb5;
+  --label-dark: #2a2c32;
+  --section-title: #1a1c22;
 
   --font-playfair: "Playfair Display", serif;
   --font-jetbrains: "JetBrains Mono", monospace;
@@ -103,14 +108,87 @@ body {
   );
 }
 
-/* Section panel - brushed aluminum grouped container */
-.section-panel {
-  background-color: var(--panel-surface);
-  border: 1px solid var(--panel-border);
-  border-radius: 8px;
+/* Brushed aluminum texture - bright horizontal brush lines */
+.brushed-aluminum {
+  background-color: var(--panel-aluminum);
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.25) 0%,
+      transparent 8%,
+      transparent 92%,
+      rgba(0, 0, 0, 0.06) 100%
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.08) 0px,
+      transparent 1px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.03) 0px,
+      transparent 3px,
+      transparent 7px
+    );
+}
+
+/* Chrome grill stripe */
+.chrome-grill {
+  background-color: #18191c;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 1px,
+    rgba(180, 182, 190, 0.15) 1px,
+    rgba(180, 182, 190, 0.15) 2px,
+    transparent 2px,
+    transparent 4px
+  );
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+    inset 0 2px 4px rgba(0, 0, 0, 0.6),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* Title plate - recessed chrome plate */
+.title-plate {
+  background: linear-gradient(
+    to bottom,
+    #3a3c42,
+    #c8cad0 20%,
+    #e2e4e8 50%,
+    #c8cad0 80%,
+    #3a3c42
+  );
+  border: 1px solid #2a2c30;
+  border-radius: 3px;
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.2),
+    0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* Section panel - bright brushed aluminum grouped container */
+.section-panel {
+  background-color: var(--panel-aluminum);
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.2) 0%,
+      transparent 6%,
+      transparent 94%,
+      rgba(0, 0, 0, 0.04) 100%
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.06) 0px,
+      transparent 1px,
+      transparent 2px
+    );
+  border: 1px solid var(--panel-aluminum-dark);
+  border-radius: 10px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
     0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
@@ -121,7 +199,7 @@ body {
   border-radius: 4px;
   box-shadow:
     inset 0 1px 3px rgba(0, 0, 0, 0.6),
-    0 1px 0 rgba(255, 255, 255, 0.03);
+    0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 /* LED pulse animation */

@@ -39,7 +39,7 @@ export function Rhodes() {
       )}
 
       {/* Chrome top trim */}
-      <div className="chrome-trim h-[4px] w-full" />
+      <div className="chrome-trim h-[5px] w-full" />
 
       {/* Namerail + Control Panel */}
       <ControlPanel
@@ -60,7 +60,7 @@ export function Rhodes() {
       />
 
       {/* Chrome mid trim */}
-      <div className="chrome-trim h-[2px] w-full" />
+      <div className="chrome-trim h-[3px] w-full" />
 
       {/* Keyboard */}
       <div className="flex-1 min-h-0 px-3 py-2 pb-3">
