@@ -4,29 +4,30 @@
  * Uses e.code (physical key position) instead of e.key so the mapping is
  * modifier-independent and works across keyboard layouts (QWERTY, AZERTY, Dvorak).
  *
- * Pre-lower:    ShiftLeft → B below lower octave
+ * Pre-lower:    CapsLock → Bb below, ShiftLeft → B below lower octave
  *
  * Lower row = octave 1:
  *   Black:  S  D     G  H  J        (C# D#    F# G# A#)
  *   White: Z  X  C  V  B  N  M      (C  D  E  F  G  A  B)
  *
  * Bridge (lower→upper, duplicates upper row):
- *   Black:  K  L
+ *   Black:  L  ;
  *   White: ,  .  /
  *
- * Pre-upper:    Tab → B below upper octave (same as M)
+ * Pre-upper:    Backquote → Bb below, Tab → B below upper octave
  *
  * Upper row = octave 2 (+12):
  *   Black:  2  3     5  6  7        (C# D#    F# G# A#)
  *   White: Q  W  E  R  T  Y  U      (C  D  E  F  G  A  B)
  *
  * Extension (3rd octave partial, +24):
- *   Black:  9  0     =
- *   White: I  O  P  [  ]
+ *   Black:  9  0     =  Delete
+ *   White: I  O  P  [  ]  \
  */
 export const KEY_MAP: Record<string, number> = {
-  // Pre-lower — B below
-  ShiftLeft: -1,
+  // Pre-lower — Bb and B below
+  CapsLock: -2, // Bb
+  ShiftLeft: -1, // B
 
   // Lower octave — white keys
   KeyZ: 0, // C
@@ -50,11 +51,12 @@ export const KEY_MAP: Record<string, number> = {
   Slash: 16, // E
 
   // Bridge — black keys
-  KeyK: 13, // C#
-  KeyL: 15, // D#
+  KeyL: 13, // C#
+  Semicolon: 15, // D#
 
-  // Pre-upper — B below upper octave
-  Tab: 11,
+  // Pre-upper — Bb and B below upper octave
+  Backquote: 10, // Bb
+  Tab: 11, // B
 
   // Upper octave — white keys (+12)
   KeyQ: 12, // C
@@ -78,11 +80,13 @@ export const KEY_MAP: Record<string, number> = {
   KeyP: 28, // E
   BracketLeft: 29, // F
   BracketRight: 31, // G
+  Backslash: 33, // A
 
   // Extension — black keys (+24)
   Digit9: 25, // C#
   Digit0: 27, // D#
   Equal: 30, // F#
+  Backspace: 27, // Eb (alias for Digit0)
 };
 
 /**

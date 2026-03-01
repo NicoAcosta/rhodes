@@ -9,19 +9,29 @@ export function Rhodes() {
 
   return (
     <div
-      className="flex h-dvh w-dvw flex-col bg-body overflow-hidden"
+      className="tolex flex h-dvh w-dvw flex-col overflow-hidden"
+      style={{ backgroundColor: "var(--body)" }}
       onPointerDown={() => {
         if (!rhodes.isReady) rhodes.init();
       }}
     >
       {/* Init overlay */}
       {!rhodes.isReady && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-body/90 backdrop-blur-sm">
-          <div className="flex flex-col items-center gap-3">
-            <div className="text-2xl font-light tracking-widest text-chrome">
-              RHODES KEYS
+        <div
+          className="absolute inset-0 z-50 flex items-center justify-center"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(40,35,28,0.95) 0%, rgba(15,15,15,0.97) 70%)",
+            backdropFilter: "blur(4px)",
+          }}
+        >
+          <div className="flex flex-col items-center gap-4">
+            <div
+              className="font-[family-name:var(--font-playfair)] text-3xl font-semibold tracking-[0.15em] text-accent"
+            >
+              RHODES
             </div>
-            <div className="animate-pulse text-sm text-accent">
+            <div className="font-[family-name:var(--font-jetbrains)] animate-pulse text-xs tracking-wider text-chrome/50">
               Tap or press any key to start
             </div>
           </div>
@@ -29,9 +39,9 @@ export function Rhodes() {
       )}
 
       {/* Chrome top trim */}
-      <div className="h-[3px] w-full bg-gradient-to-r from-transparent via-chrome/40 to-transparent" />
+      <div className="chrome-trim h-[3px] w-full" />
 
-      {/* Control Panel */}
+      {/* Namerail + Control Panel */}
       <ControlPanel
         volume={rhodes.volume}
         onVolumeChange={rhodes.setVolume}
@@ -50,10 +60,10 @@ export function Rhodes() {
       />
 
       {/* Chrome mid trim */}
-      <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-chrome/30 to-transparent" />
+      <div className="chrome-trim h-[2px] w-full" />
 
       {/* Keyboard */}
-      <div className="flex-1 min-h-0 p-2 pb-3">
+      <div className="flex-1 min-h-0 px-3 py-2 pb-3">
         <Keyboard
           octaveBase={rhodes.octaveBase}
           activeNotes={rhodes.activeNotes}
@@ -63,7 +73,7 @@ export function Rhodes() {
       </div>
 
       {/* Chrome bottom trim */}
-      <div className="h-[3px] w-full bg-gradient-to-r from-transparent via-chrome/40 to-transparent" />
+      <div className="chrome-trim h-[3px] w-full" />
     </div>
   );
 }

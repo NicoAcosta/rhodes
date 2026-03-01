@@ -14,14 +14,22 @@ export function Key({ midi, isBlack, isActive, label }: KeyProps) {
         data-note={midi}
         className={`
           h-full w-full cursor-pointer rounded-b-md
-          border border-neutral-700
           transition-transform duration-75
-          ${
-            isActive
-              ? "translate-y-[2px] bg-neutral-600 shadow-inner"
-              : "bg-key-black shadow-[0_4px_6px_rgba(0,0,0,0.5)]"
-          }
         `}
+        style={
+          isActive
+            ? {
+                background: "linear-gradient(to bottom, #333, #222)",
+                boxShadow: "inset 0 -1px 2px rgba(0,0,0,0.5)",
+                transform: "translateY(2px)",
+              }
+            : {
+                background: "linear-gradient(to bottom, #222, #111)",
+                boxShadow:
+                  "inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 6px rgba(0,0,0,0.6)",
+                border: "1px solid #0a0a0a",
+              }
+        }
       >
         {label && <KeyLabel label={label} isBlack />}
       </div>
@@ -33,14 +41,23 @@ export function Key({ midi, isBlack, isActive, label }: KeyProps) {
       data-note={midi}
       className={`
         relative flex-1 cursor-pointer rounded-b-lg
-        border-x border-b border-neutral-300
         transition-transform duration-75
-        ${
-          isActive
-            ? "translate-y-[2px] bg-[#e8e3d8] shadow-inner"
-            : "bg-key-white shadow-[0_4px_8px_rgba(0,0,0,0.3)]"
-        }
       `}
+      style={
+        isActive
+          ? {
+              background: "linear-gradient(to bottom, #ece7dc, #e2ddd2)",
+              boxShadow:
+                "inset 0 2px 6px rgba(180, 160, 100, 0.2), inset 0 0 0 1px rgba(0,0,0,0.05)",
+              transform: "translateY(2px)",
+            }
+          : {
+              background: "linear-gradient(to bottom, #f8f4eb, #ede8dd)",
+              border: "1px solid #d5d0c5",
+              boxShadow:
+                "1px 0 0 rgba(0,0,0,0.06), -1px 0 0 rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.2)",
+            }
+      }
     >
       {label && <KeyLabel label={label} isBlack={false} />}
     </div>

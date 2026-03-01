@@ -1,5 +1,18 @@
 import type { Metadata, Viewport } from "next";
+import { Playfair_Display, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Rhodes Keys",
@@ -11,7 +24,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#1a1a1a",
+  themeColor: "#0f0f0f",
 };
 
 export default function RootLayout({
@@ -21,7 +34,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={`${playfair.variable} ${jetbrains.variable}`}>
+        {children}
+      </body>
     </html>
   );
 }

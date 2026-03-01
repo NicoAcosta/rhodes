@@ -37,31 +37,51 @@ export function ControlPanel({
   qualityTier,
 }: ControlPanelProps) {
   return (
-    <div
-      className="flex items-center justify-between px-4 py-2
-        bg-gradient-to-b from-panel to-[#342e28]
-        landscape:max-h-[80px]"
-    >
-      {/* Knobs */}
-      <div className="flex items-center gap-4 sm:gap-6">
-        <Knob label="Volume" value={volume} onChange={onVolumeChange} />
-        <Knob
-          label="Trem Rate"
-          value={tremoloRate / 8}
-          onChange={(v) => onTremoloRateChange(v * 8)}
-        />
-        <Knob
-          label="Trem Depth"
-          value={tremoloDepth}
-          onChange={onTremoloDepthChange}
-        />
-        <Knob label="Tone" value={tone} onChange={onToneChange} />
-        <Knob label="Chorus" value={chorusMix} onChange={onChorusMixChange} />
+    <div className="flex flex-col">
+      {/* Namerail */}
+      <div
+        className="brushed-metal flex h-8 items-center justify-between px-4"
+        style={{ backgroundColor: "var(--namerail)" }}
+      >
+        <div
+          className="font-[family-name:var(--font-playfair)] text-[11px] font-semibold tracking-[0.3em] text-accent"
+          style={{ fontVariant: "small-caps" }}
+        >
+          RHODES
+        </div>
+        <QualityIndicator tier={qualityTier} />
       </div>
 
-      {/* Octave + Quality */}
-      <div className="flex items-center gap-3">
-        <QualityIndicator tier={qualityTier} />
+      {/* Inset border between namerail and controls */}
+      <div className="h-px w-full bg-black/40" />
+
+      {/* Controls area */}
+      <div
+        className="flex items-center justify-between px-4 py-3
+          landscape:max-h-[80px]"
+        style={{
+          background: "linear-gradient(to bottom, var(--panel), #1e1b18)",
+          boxShadow: "inset 0 2px 8px rgba(0,0,0,0.4)",
+        }}
+      >
+        {/* Knobs */}
+        <div className="flex items-center gap-5 sm:gap-8">
+          <Knob label="Volume" value={volume} onChange={onVolumeChange} />
+          <Knob
+            label="Trem Rate"
+            value={tremoloRate / 8}
+            onChange={(v) => onTremoloRateChange(v * 8)}
+          />
+          <Knob
+            label="Trem Depth"
+            value={tremoloDepth}
+            onChange={onTremoloDepthChange}
+          />
+          <Knob label="Tone" value={tone} onChange={onToneChange} />
+          <Knob label="Chorus" value={chorusMix} onChange={onChorusMixChange} />
+        </div>
+
+        {/* Octave */}
         <OctaveControl
           octaveBase={octaveBase}
           onOctaveUp={onOctaveUp}

@@ -30,8 +30,8 @@ describe("KEY_MAP", () => {
     }
   });
 
-  it("has entries for bridge keys (Comma, Period, Slash, K, L)", () => {
-    const codes = ["Comma", "Period", "Slash", "KeyK", "KeyL"];
+  it("has entries for bridge keys (Comma, Period, Slash, L, ;)", () => {
+    const codes = ["Comma", "Period", "Slash", "KeyL", "Semicolon"];
     for (const code of codes) {
       expect(KEY_MAP).toHaveProperty(code);
     }
@@ -59,7 +59,7 @@ describe("KEY_MAP", () => {
   });
 
   it("does not map gap keys", () => {
-    const gaps = ["Digit1", "Digit4", "Digit8", "Minus", "KeyA", "KeyF", "CapsLock"];
+    const gaps = ["Digit1", "Digit4", "Digit8", "Minus", "KeyA", "KeyF"];
     for (const code of gaps) {
       expect(KEY_MAP).not.toHaveProperty(code);
     }
@@ -131,10 +131,10 @@ describe("codeToMidiNote", () => {
     expect(codeToMidiNote("Period", 60)).toBe(codeToMidiNote("KeyW", 60));
     // Slash = KeyE (both offset 16)
     expect(codeToMidiNote("Slash", 60)).toBe(codeToMidiNote("KeyE", 60));
-    // KeyK = Digit2 (both offset 13)
-    expect(codeToMidiNote("KeyK", 60)).toBe(codeToMidiNote("Digit2", 60));
-    // KeyL = Digit3 (both offset 15)
-    expect(codeToMidiNote("KeyL", 60)).toBe(codeToMidiNote("Digit3", 60));
+    // KeyL = Digit2 (both offset 13)
+    expect(codeToMidiNote("KeyL", 60)).toBe(codeToMidiNote("Digit2", 60));
+    // Semicolon = Digit3 (both offset 15)
+    expect(codeToMidiNote("Semicolon", 60)).toBe(codeToMidiNote("Digit3", 60));
   });
 
   it("maps extension keys into 3rd octave", () => {

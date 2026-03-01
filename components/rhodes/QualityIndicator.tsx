@@ -6,25 +6,42 @@ interface QualityIndicatorProps {
 
 export function QualityIndicator({ tier }: QualityIndicatorProps) {
   const isLoading = tier === "loading-t1" || tier === "loading-t2";
-  const isSampled = tier === "t1" || tier === "t2" || isLoading;
+
+  let color: string;
+  let glow: string | undefined;
+  let className = "";
+  let title: string;
+
+  if (tier === "t2") {
+    color = "var(--led)";
+    glow = "0 0 6px var(--led), 0 0 12px rgba(74, 222, 128, 0.3)";
+    title = "HD Samples";
+  } else if (tier === "t1") {
+    color = "var(--led)";
+    glow = "0 0 3px rgba(74, 222, 128, 0.3)";
+    title = "Samples loaded";
+  } else if (isLoading) {
+    color = "var(--accent)";
+    glow = "0 0 4px var(--accent)";
+    className = "led-pulse";
+    title = "Loading samples…";
+  } else {
+    color = "#555";
+    title = "FM synthesis";
+  }
 
   return (
-    <div className="flex items-center gap-1 text-[10px] tracking-wider font-medium uppercase">
-      {isSampled ? (
-        <span
-          className={
-            tier === "t2"
-              ? "text-accent"
-              : isLoading
-                ? "text-chrome/60 animate-pulse"
-                : "text-chrome/80"
-          }
-        >
-          HD
-        </span>
-      ) : (
-        <span className="text-chrome/40">FM</span>
-      )}
-    </div>
+    <div
+      className={className}
+      title={title}
+      style={{
+        width: 6,
+        height: 6,
+        borderRadius: "50%",
+        backgroundColor: color,
+        boxShadow: glow,
+        flexShrink: 0,
+      }}
+    />
   );
 }
