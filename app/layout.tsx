@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Playfair_Display, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -36,6 +37,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${playfair.variable} ${jetbrains.variable}`}>
         {children}
+        <Analytics />
       </body>
     </html>
   );
