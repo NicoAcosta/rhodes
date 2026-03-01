@@ -21,9 +21,37 @@ const dmSans = DM_Sans({
   display: "swap",
 });
 
+const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
   title: "Rhodes Keys",
-  description: "Virtual Fender Rhodes Suitcase Piano",
+  description:
+    "Virtual Fender Rhodes Suitcase Piano — play classic electric piano sounds right in your browser.",
+  metadataBase: new URL(appUrl),
+  openGraph: {
+    title: "Rhodes Keys",
+    description:
+      "Virtual Fender Rhodes Suitcase Piano — play classic electric piano sounds right in your browser.",
+    url: appUrl,
+    siteName: "Rhodes Keys",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Rhodes Keys — Virtual Electric Piano",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rhodes Keys",
+    description:
+      "Virtual Fender Rhodes Suitcase Piano — play classic electric piano sounds right in your browser.",
+    images: ["/og.png"],
+  },
 };
 
 export const viewport: Viewport = {
