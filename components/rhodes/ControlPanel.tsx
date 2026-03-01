@@ -1,4 +1,5 @@
 import type { SampleTier } from "@/lib/audio/samples/sample-manager";
+import type { ReactNode } from "react";
 import { Knob } from "./Knob";
 import { OctaveControl } from "./OctaveControl";
 import { QualityIndicator } from "./QualityIndicator";
@@ -18,6 +19,39 @@ interface ControlPanelProps {
   onOctaveUp: () => void;
   onOctaveDown: () => void;
   qualityTier: SampleTier;
+}
+
+function EffectSection({
+  label,
+  active,
+  children,
+}: {
+  label: string;
+  active: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div className="section-panel flex flex-col gap-2 px-3 py-2">
+      <div className="flex items-center gap-1.5">
+        <div
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: "50%",
+            backgroundColor: active ? "var(--led)" : "var(--led-off)",
+            boxShadow: active
+              ? "0 0 4px var(--led), 0 0 8px var(--accent-glow)"
+              : undefined,
+            flexShrink: 0,
+          }}
+        />
+        <span className="font-[family-name:var(--font-label)] text-[9px] uppercase tracking-[0.15em] text-chrome/50">
+          {label}
+        </span>
+      </div>
+      <div className="flex items-center gap-4">{children}</div>
+    </div>
+  );
 }
 
 export function ControlPanel({
@@ -44,7 +78,7 @@ export function ControlPanel({
         style={{ backgroundColor: "var(--namerail)" }}
       >
         <div
-          className="font-[family-name:var(--font-playfair)] text-[11px] font-semibold tracking-[0.3em] text-accent"
+          className="font-[family-name:var(--font-playfair)] text-[11px] font-semibold tracking-[0.3em] text-chrome"
           style={{ fontVariant: "small-caps" }}
         >
           RHODES
@@ -57,28 +91,36 @@ export function ControlPanel({
 
       {/* Controls area */}
       <div
-        className="flex items-center justify-between px-4 py-3
+        className="flex items-center justify-between gap-3 px-4 py-3
           landscape:max-h-[80px]"
         style={{
-          background: "linear-gradient(to bottom, var(--panel), #1e1b18)",
+          background: "linear-gradient(to bottom, var(--panel), #131416)",
           boxShadow: "inset 0 2px 8px rgba(0,0,0,0.4)",
         }}
       >
-        {/* Knobs */}
-        <div className="flex items-center gap-5 sm:gap-8">
-          <Knob label="Volume" value={volume} onChange={onVolumeChange} />
-          <Knob
-            label="Trem Rate"
-            value={tremoloRate / 8}
-            onChange={(v) => onTremoloRateChange(v * 8)}
-          />
-          <Knob
-            label="Trem Depth"
-            value={tremoloDepth}
-            onChange={onTremoloDepthChange}
-          />
-          <Knob label="Tone" value={tone} onChange={onToneChange} />
-          <Knob label="Chorus" value={chorusMix} onChange={onChorusMixChange} />
+        {/* Effect sections */}
+        <div className="flex items-start gap-3">
+          <EffectSection label="EQ" active>
+            <Knob label="Volume" value={volume} onChange={onVolumeChange} />
+            <Knob label="Tone" value={tone} onChange={onToneChange} />
+          </EffectSection>
+
+          <EffectSection label="Tremolo" active={tremoloDepth > 0}>
+            <Knob
+              label="Rate"
+              value={tremoloRate / 8}
+              onChange={(v) => onTremoloRateChange(v * 8)}
+            />
+            <Knob
+              label="Depth"
+              value={tremoloDepth}
+              onChange={onTremoloDepthChange}
+            />
+          </EffectSection>
+
+          <EffectSection label="Chorus" active={chorusMix > 0}>
+            <Knob label="Mix" value={chorusMix} onChange={onChorusMixChange} />
+          </EffectSection>
         </div>
 
         {/* Octave */}

@@ -14,19 +14,19 @@ export function QualityIndicator({ tier }: QualityIndicatorProps) {
 
   if (tier === "t2") {
     color = "var(--led)";
-    glow = "0 0 6px var(--led), 0 0 12px rgba(74, 222, 128, 0.3)";
+    glow = "0 0 6px var(--led), 0 0 12px var(--accent-glow)";
     title = "HD Samples";
   } else if (tier === "t1") {
     color = "var(--led)";
-    glow = "0 0 3px rgba(74, 222, 128, 0.3)";
+    glow = "0 0 3px var(--accent-glow)";
     title = "Samples loaded";
   } else if (isLoading) {
-    color = "var(--accent)";
-    glow = "0 0 4px var(--accent)";
+    color = "var(--led)";
+    glow = "0 0 4px var(--led)";
     className = "led-pulse";
-    title = "Loading samples…";
+    title = "Loading samples\u2026";
   } else {
-    color = "#555";
+    color = "var(--led-off)";
     title = "FM synthesis";
   }
 
@@ -35,8 +35,8 @@ export function QualityIndicator({ tier }: QualityIndicatorProps) {
       className={className}
       title={title}
       style={{
-        width: 6,
-        height: 6,
+        width: 7,
+        height: 7,
         borderRadius: "50%",
         backgroundColor: color,
         boxShadow: glow,

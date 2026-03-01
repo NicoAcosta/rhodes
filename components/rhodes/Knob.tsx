@@ -8,31 +8,42 @@ interface KnobProps {
 
 const MIN_ANGLE = -135;
 const MAX_ANGLE = 135;
-const DRAG_SENSITIVITY = 200; // pixels for full range
-const CENTER = 28;
-const OUTER_R = 24;
-const CAP_R = 16;
-const ARC_R = 21;
+const DRAG_SENSITIVITY = 200;
+const CENTER = 40;
+const OUTER_R = 32;
+const KNURL_R = 28;
+const CAP_R = 20;
+const TICK_COUNT = 21;
+const TICK_INNER = 34;
+const TICK_OUTER = 38;
 
-function describeArc(angle: number): string {
-  const startAngle = MIN_ANGLE;
-  const startRad = ((startAngle - 90) * Math.PI) / 180;
-  const endRad = ((angle - 90) * Math.PI) / 180;
-  const x1 = CENTER + ARC_R * Math.cos(startRad);
-  const y1 = CENTER + ARC_R * Math.sin(startRad);
-  const x2 = CENTER + ARC_R * Math.cos(endRad);
-  const y2 = CENTER + ARC_R * Math.sin(endRad);
-  const largeArc = angle - startAngle > 180 ? 1 : 0;
-  return `M ${x1} ${y1} A ${ARC_R} ${ARC_R} 0 ${largeArc} 1 ${x2} ${y2}`;
+function generateTicks(value: number) {
+  const ticks: { x1: number; y1: number; x2: number; y2: number; active: boolean }[] = [];
+  for (let i = 0; i < TICK_COUNT; i++) {
+    const t = i / (TICK_COUNT - 1);
+    const angle = MIN_ANGLE + t * (MAX_ANGLE - MIN_ANGLE);
+    const rad = ((angle - 90) * Math.PI) / 180;
+    ticks.push({
+      x1: CENTER + TICK_INNER * Math.cos(rad),
+      y1: CENTER + TICK_INNER * Math.sin(rad),
+      x2: CENTER + TICK_OUTER * Math.cos(rad),
+      y2: CENTER + TICK_OUTER * Math.sin(rad),
+      active: t <= value,
+    });
+  }
+  return ticks;
 }
 
 export function Knob({ label, value, onChange }: KnobProps) {
   const ids = useId();
   const capGradId = `cap-${ids}`;
+  const ringGradId = `ring-${ids}`;
   const knurlId = `knurl-${ids}`;
+  const shadowId = `shadow-${ids}`;
   const dragStartRef = useRef<{ y: number; startValue: number } | null>(null);
 
   const angle = MIN_ANGLE + value * (MAX_ANGLE - MIN_ANGLE);
+  const ticks = generateTicks(value);
 
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
@@ -62,8 +73,8 @@ export function Knob({ label, value, onChange }: KnobProps) {
 
   // Indicator notch position
   const notchRad = ((angle - 90) * Math.PI) / 180;
-  const notchInner = 8;
-  const notchOuter = 14;
+  const notchInner = 10;
+  const notchOuter = 18;
   const nx1 = CENTER + notchInner * Math.cos(notchRad);
   const ny1 = CENTER + notchInner * Math.sin(notchRad);
   const nx2 = CENTER + notchOuter * Math.cos(notchRad);
@@ -72,58 +83,93 @@ export function Knob({ label, value, onChange }: KnobProps) {
   return (
     <div className="flex flex-col items-center gap-1.5">
       <svg
-        width="56"
-        height="56"
-        viewBox="0 0 56 56"
+        width="80"
+        height="80"
+        viewBox="0 0 80 80"
         className="cursor-grab active:cursor-grabbing"
-        style={{ filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))" }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
       >
         <defs>
-          {/* Knurled outer ring pattern */}
-          <pattern id={knurlId} width="3" height="3" patternUnits="userSpaceOnUse">
-            <rect width="3" height="3" fill="#252220" />
-            <rect width="1" height="3" fill="#1a1816" />
+          {/* Ambient shadow */}
+          <radialGradient id={shadowId}>
+            <stop offset="0%" stopColor="rgba(0,0,0,0.4)" />
+            <stop offset="100%" stopColor="rgba(0,0,0,0)" />
+          </radialGradient>
+          {/* Silver outer ring gradient - top-to-bottom bevel */}
+          <linearGradient id={ringGradId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#e8eaee" />
+            <stop offset="25%" stopColor="#b0b3b8" />
+            <stop offset="50%" stopColor="#8a8d94" />
+            <stop offset="75%" stopColor="#b0b3b8" />
+            <stop offset="100%" stopColor="#d0d2d6" />
+          </linearGradient>
+          {/* Knurled grip pattern */}
+          <pattern id={knurlId} width="2" height="2" patternUnits="userSpaceOnUse">
+            <rect width="2" height="2" fill="#28292e" />
+            <rect width="1" height="2" fill="#1e1f24" />
           </pattern>
           {/* Chrome cap gradient */}
           <radialGradient id={capGradId} cx="38%" cy="32%">
-            <stop offset="0%" stopColor="#e8e4dc" />
-            <stop offset="50%" stopColor="#c8c4bc" />
-            <stop offset="100%" stopColor="#78746c" />
+            <stop offset="0%" stopColor="#e2e4e8" />
+            <stop offset="50%" stopColor="#c0c2c8" />
+            <stop offset="100%" stopColor="#6b6e74" />
           </radialGradient>
         </defs>
 
-        {/* Position arc (background track) */}
-        <path
-          d={describeArc(MAX_ANGLE)}
-          fill="none"
-          stroke="rgba(255,255,255,0.06)"
-          strokeWidth="2"
-          strokeLinecap="round"
+        {/* Ambient shadow below knob */}
+        <ellipse
+          cx={CENTER}
+          cy={CENTER + 2}
+          rx="30"
+          ry="28"
+          fill={`url(#${shadowId})`}
         />
-        {/* Position arc (value) */}
-        {value > 0.01 && (
-          <path
-            d={describeArc(angle)}
-            fill="none"
-            stroke="var(--accent)"
-            strokeWidth="2"
-            strokeLinecap="round"
-            opacity="0.8"
-          />
-        )}
 
-        {/* Outer knurled ring */}
+        {/* Tick marks */}
+        {ticks.map((tick, i) => (
+          <line
+            key={i}
+            x1={tick.x1}
+            y1={tick.y1}
+            x2={tick.x2}
+            y2={tick.y2}
+            stroke={tick.active ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.12)"}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+        ))}
+
+        {/* Outer silver beveled ring */}
         <circle
           cx={CENTER}
           cy={CENTER}
           r={OUTER_R}
+          fill={`url(#${ringGradId})`}
+          stroke="rgba(0,0,0,0.3)"
+          strokeWidth="0.5"
+        />
+
+        {/* Inner bevel highlight */}
+        <circle
+          cx={CENTER}
+          cy={CENTER}
+          r={OUTER_R - 0.5}
+          fill="none"
+          stroke="rgba(255,255,255,0.15)"
+          strokeWidth="0.5"
+        />
+
+        {/* Knurled grip area */}
+        <circle
+          cx={CENTER}
+          cy={CENTER}
+          r={KNURL_R}
           fill={`url(#${knurlId})`}
-          stroke="#1a1816"
-          strokeWidth="1"
+          stroke="#1a1b1e"
+          strokeWidth="0.5"
         />
 
         {/* Chrome cap */}
@@ -132,31 +178,31 @@ export function Knob({ label, value, onChange }: KnobProps) {
           cy={CENTER}
           r={CAP_R}
           fill={`url(#${capGradId})`}
-          stroke="rgba(0,0,0,0.3)"
+          stroke="rgba(0,0,0,0.25)"
           strokeWidth="0.5"
         />
 
         {/* Specular highlight on cap */}
         <ellipse
-          cx={CENTER - 3}
-          cy={CENTER - 4}
-          rx="6"
-          ry="4"
-          fill="rgba(255,255,255,0.15)"
+          cx={CENTER - 4}
+          cy={CENTER - 5}
+          rx="8"
+          ry="5"
+          fill="rgba(255,255,255,0.18)"
         />
 
-        {/* Indicator notch */}
+        {/* White indicator notch */}
         <line
           x1={nx1}
           y1={ny1}
           x2={nx2}
           y2={ny2}
-          stroke="var(--accent)"
-          strokeWidth="2"
+          stroke="#ffffff"
+          strokeWidth="2.5"
           strokeLinecap="round"
         />
       </svg>
-      <span className="font-[family-name:var(--font-jetbrains)] text-[9px] uppercase tracking-[0.12em] text-chrome/50">
+      <span className="font-[family-name:var(--font-label)] text-[10px] uppercase tracking-[0.15em] text-chrome/60">
         {label}
       </span>
     </div>

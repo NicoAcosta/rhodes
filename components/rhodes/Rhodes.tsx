@@ -9,7 +9,7 @@ export function Rhodes() {
 
   return (
     <div
-      className="tolex flex h-dvh w-dvw flex-col overflow-hidden"
+      className="leather-texture flex h-dvh w-dvw flex-col overflow-hidden"
       style={{ backgroundColor: "var(--body)" }}
       onPointerDown={() => {
         if (!rhodes.isReady) rhodes.init();
@@ -21,13 +21,13 @@ export function Rhodes() {
           className="absolute inset-0 z-50 flex items-center justify-center"
           style={{
             background:
-              "radial-gradient(ellipse at center, rgba(40,35,28,0.95) 0%, rgba(15,15,15,0.97) 70%)",
+              "radial-gradient(ellipse at center, rgba(26,27,30,0.95) 0%, rgba(13,13,14,0.97) 70%)",
             backdropFilter: "blur(4px)",
           }}
         >
           <div className="flex flex-col items-center gap-4">
             <div
-              className="font-[family-name:var(--font-playfair)] text-3xl font-semibold tracking-[0.15em] text-accent"
+              className="font-[family-name:var(--font-playfair)] text-3xl font-semibold tracking-[0.15em] text-chrome"
             >
               RHODES
             </div>
@@ -39,7 +39,7 @@ export function Rhodes() {
       )}
 
       {/* Chrome top trim */}
-      <div className="chrome-trim h-[3px] w-full" />
+      <div className="chrome-trim h-[4px] w-full" />
 
       {/* Namerail + Control Panel */}
       <ControlPanel
